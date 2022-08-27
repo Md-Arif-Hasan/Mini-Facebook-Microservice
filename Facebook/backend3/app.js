@@ -33,6 +33,6 @@ app.use((err, req, res, next) => {
 });
 
 //start server
-server.listen(5002, () => console.log(`Server started at port: 5002`));
+server.listen(5300, () => console.log(`Server started at port: 5002`));
 
 let userList = new Map();

@@ -33,5 +33,5 @@ app.use((err, req, res, next) => {
 });
 
 //start server
-server.listen(5001, () => console.log(`Server started at port: 5001`));
+server.listen(5200, () => console.log(`Server started at port: 5001`));
 
