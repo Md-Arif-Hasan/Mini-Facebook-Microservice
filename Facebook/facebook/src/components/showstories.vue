@@ -42,7 +42,7 @@
 
                                     <!-- <div class="single-story"  v-for="image in fetchedStory" >
                                        <img :src="dataUrl">
-                                    </div> -->
+                                    </div> ghfhtfhtfhtfu-->
                                 </div>
                             </div>
                         </div>
