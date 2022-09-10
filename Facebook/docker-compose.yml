@@ -1,0 +1,69 @@
+version: "3"
+
+services:
+    nginx:
+        image: nginx
+        restart: unless-stopped
+        ports:
+            - 8000:8000
+        volumes:
+            - ./nginx.conf:/etc/nginx/conf.d/fb.conf
+        depends_on:
+            - userservice
+            - statusservice
+            - storyservice
+
+    userservice:
+        build: ./backend1
+        restart: unless-stopped
+        depends_on:
+            - userdb
+
+    userdb:
+        image: mongo
+
+        ports:
+            - 30000:30000
+
+        restart: unless-stopped
+        volumes:
+            - /mongo:/data/db
+
+    statusservice:
+        build: ./backend2
+        restart: unless-stopped
+        depends_on:
+            - statusdb
+
+    statusdb:
+        image: mongo
+
+        ports:
+            - 30001:30001
+
+        restart: unless-stopped
+
+    storyservice:
+        build: ./backend3
+        restart: unless-stopped
+        depends_on:
+            - storydb
+            - storyobjectdb
+
+    storydb:
+        image: mongo
+
+        ports:
+            - 30002:27017
+
+        restart: unless-stopped
+
+    storyobjectdb:
+        image: minio/minio:latest
+        ports:
+            - 9000:9000
+            - 9001:9001
+        environment:
+            - MINIO_ACCESS_KEY=minioadmin
+            - MINIO_SECRET_KEY=minioadmin
+        command: server --console-address ":9001" /data

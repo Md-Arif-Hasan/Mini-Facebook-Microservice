@@ -28,5 +28,7 @@ router.use(express.static(__dirname + "./public/"));
 
 router.post('/story', upload.single("file") , storyController.addstory);
 router.get('/story/:email',  storyController.getday);
+router.get('/story/get/:id',  storyController.storyInd);
+
 
 module.exports = router;

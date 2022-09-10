@@ -9,19 +9,26 @@ const Story = mongoose.model('Story');
 var Minio = require('minio')
 
 var minioClient = new Minio.Client({
-    endPoint: '127.0.0.1',
+    endPoint: 'storyobjectdb',
     port: 9000,
     useSSL: false,
-    accessKey: 'VhM5Ih7d3CAmmTFR',
-    secretKey: '72kY9Vv3WpCWUKay5LeqpdVXzLvxxyXq'
+    accessKey: 'minioadmin',
+    secretKey: 'minioadmin'
 });
 
 
 module.exports.addstory = async(req, res) => {
     console.log("storyyyy ");
-        var url = crypto.randomUUID();
+        var url = crypto.randomUUID() + '.png';
         console.log(url);
         console.log(req.body);
+
+
+    minioClient.makeBucket('story', 'us-east-1', function(err) {
+        if (err) return console.log(err)
+
+        console.log('Bucket created successfully');
+    });
 
 
         minioClient.fPutObject('story', url, req.file.path, function(err, objInfo) {
@@ -65,4 +72,31 @@ module.exports.getday = (req, res, next) => {
     })
    // console.log(res.data)
 }
+
+
+
+exports.storyInd = ((req, res) =>{
+    try {
+        let data;
+        console.log(req.params.id);
+        minioClient.getObject('story', req.params.id, (err, objStream) => {
+
+            if(err) {
+               
+                return res.status(404).send({ message: "Image not found" });
+            } 
+            //console.log("req is " + req.params.id);
+            objStream.on('data', (chunk) => {
+                data = !data ? new Buffer(chunk) : Buffer.concat([data, chunk]);
+            });
+            objStream.on('end', () => {
+                res.writeHead(200, { 'Content-Type': 'image/png' });
+                res.write(data);
+                res.end();
+            });
+        });
+    } catch (error) {
+        res.status(500).send({ message: "Internal Server Error at fetching image" });
+    }
+});
 

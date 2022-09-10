@@ -35,12 +35,14 @@
                                         </div>
                                     </div> -->
 
-                                    <div class="single-story"   v-for="infe in info1" :key="infe._id" >
-                                        <img :src= "'http://127.0.0.1:9000/story/'+ infe.url " class="single-story-bg">
+                                    <div class="single-story"  v-for="infe in info1" :key="infe._id" >
+                                        <img :src= "'http://localhost:8000/story/get/'+ infe.url " class="single-story-bg">
                                     </div>
-                              
-                                  
-                              
+
+
+                                    <!-- <div class="single-story"  v-for="image in fetchedStory" >
+                                       <img :src="dataUrl">
+                                    </div> -->
                                 </div>
                             </div>
                         </div>
@@ -70,7 +72,9 @@ export default {
   data() {
     return {
       info1: "",
-      email:""
+      email:"",
+      fetchedStory:[],
+      
     };
   },
 
@@ -85,9 +89,23 @@ export default {
         {
     fetchInfo1(){
         this.email = localStorage.getItem("email");
-        console.log("http://localhost:8000/story/" + this.email);
+    
+        // axios.get("http://localhost:8000/story/" + this.email).then((res) => {this.info1 = res.data
+        // console.log(res.data)
+        // res.data.forEach(url => {
+        //     axios.get("http://localhost:8000/story/get/" + url.url).then((image) => {
+        //         console.log('image: ', image);
+        //         this.fetchedStory.push(image);
+        //     })
+        // });
+        // });
+
+
 
         axios.get("http://localhost:8000/story/" + this.email).then((res) => (this.info1 = res.data));
+
+
+
       
     },
     // logout() {
